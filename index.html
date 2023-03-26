@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas</title>
+    <style>
+      canvas {
+        border: 5px solid black;
+      }
+      button:hover{
+        cursor: pointer;
+      }
+    </style>
+</head>
+<body>
+  <center>
+    <h1>Canvas Assignment</h1>
+  <canvas id="myCanvas" width="500" height="300"></canvas>
+  <br/>
+  <button onclick="reset()" style="background: rgb(38, 38, 212);width: 100px; height: 35px; color: white;border-radius: 5px;">Reset</button>
+</center>
+ <script>
+    const canvas = document.getElementById("myCanvas");
+    const context = canvas.getContext("2d");
+
+    context.lineWidth=5
+    //  circles
+    const colors = ["red", "blue", "green", "yellow"];
+    for (let i = 0; i < colors.length; i++) {
+      context.beginPath();
+      context.arc(50, 50 * (i + 1), 20, 0, 2 * Math.PI);
+      context.fillStyle = colors[i];
+      context.fill();
+      
+    }
+
+   
+    // arrows
+    for (let i = 0; i < colors.length; i++) {
+      context.beginPath();
+      context.moveTo(320, 50 * (i + 1));
+      context.lineTo(240, 50 * (i + 1));
+      context.stroke();
+    }
+
+
+    // Handle click eventlistenser
+    canvas.addEventListener("click", handleClick);
+
+
+    function handleClick(event) {
+      const x = event.offsetX;
+      const y = event.offsetY;
+
+
+      for (let i = 0; i < colors.length; i++) {
+        if (x > 30 && x < 70 && y > 50 * i && y < 50 * (i + 1)) {
+          //  arrow motion 
+          let xPos = 240;
+          const intervalId = setInterval(() => {
+            context.clearRect(100, 50 * (i + 1) - 10, 50, 20);
+            context.beginPath();
+            context.moveTo(320, 50 * (i + 1));
+            context.lineTo(xPos, 50 * (i + 1));
+            context.stroke();
+            xPos -= 5;
+
+
+            if (xPos < 70) {
+              clearInterval(intervalId);
+              // Change color of circle on hitting
+              context.beginPath();
+              context.arc(50, 50 * (i + 1), 20, 0, 2 * Math.PI);
+              context.fillStyle = "black";
+              context.fill();
+              context.fillStyle = "grey";
+              context.fill();
+            }
+          }, 10);
+        }
+      }
+    }
+
+
+    // Reset function
+    function reset() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < colors.length; i++) {
+        context.beginPath();
+        context.arc(50, 50 * (i + 1), 20, 0, 2 * Math.PI);
+        context.fillStyle = colors[i];
+        context.fill();
+
+
+        context.beginPath();
+        context.moveTo(320, 50 * (i + 1));
+        context.lineTo(240, 50 * (i + 1));
+        context.stroke();
+      }
+    }
+  </script>
+</body>
+</html>
